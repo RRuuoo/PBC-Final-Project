@@ -1,10 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Jun  2 07:18:30 2019
-
-@author: Elaine
-"""
-
 import googlemaps 
 gmaps = googlemaps.Client(key = '金鑰')
 geocode_result = gmaps.geocode("臺南市")
