@@ -6,7 +6,7 @@ Created on Sun Jun  2 07:18:30 2019
 """
 
 import googlemaps 
-gmaps = googlemaps.Client(key = 'AIzaSyDzvDHAHJyLbaseDLZeJ8mXpqLqfb6_lNc')
+gmaps = googlemaps.Client(key = '金鑰')
 geocode_result = gmaps.geocode("臺南市")
 city_loc = geocode_result[0]['geometry']['location']
 
