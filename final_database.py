@@ -8,14 +8,6 @@ geocode_result = gmaps.geocode("臺南市")
 city_loc = geocode_result[0]['geometry']['location']
 
 
-'''使用者輸入資料'''
-numbers = int(input())   # 輸入要去幾個地方
-target_loc = []
-for i in range(numbers):
-    tmp = input()
-    target_loc. append(tmp)  #輸入要去的地點的名稱
-
-
         
 '''取得台南市半徑30公里內，關鍵字包含之所有地點的「店名」&「id」 (台南市寬度約77.6公里)'''
 search_place = input()
