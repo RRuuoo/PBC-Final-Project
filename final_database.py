@@ -40,7 +40,7 @@ def retrieve_place_ids(places_to_go):
 def retrieve_place_ids(places_to_go):
     ids = []
     for i in range(len(places_to_go)):
-        search_result = gmaps.places_autocomplete(places_to_go[i], session_token = '*', location = city_loc, radius = 30000, strict_bounds = True)
+        search_result = gmaps.places_places(places_to_go[i], session_token = '*', location = city_loc, radius = 30000, strict_bounds = True)
         for i in range(len(search_result)):
             placeName = result[i]['structured_formatting']['main_text']
             placeId = result[i]['place_id']
