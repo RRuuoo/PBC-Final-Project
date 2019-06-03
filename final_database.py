@@ -32,48 +32,7 @@ def retrieve_place_ids(places_to_go):
             opening_hours = 'None'
         information[place_id] = {'name': name, 'address': address, 'phone_number': phone, 'opening':opening}
         
-    return information
-
-
-
-'''version2:  抓出符合關鍵字的所有資料，再依據使用者輸入的街道名稱，篩選出最終的地名'''
-def retrieve_place_ids(places_to_go):
-    ids = []
-    for i in range(len(places_to_go)):
-        search_result = gmaps.places_places(places_to_go[i], session_token = '*', location = city_loc, radius = 30000, strict_bounds = True)
-        for i in range(len(search_result)):
-            placeName = result[i]['structured_formatting']['main_text']
-            placeId = result[i]['place_id']
-            ids.append({'place_name': placeName, 'place_id':placeId}
-    return ids
-
-def create_all_data(ids):
-    information = dict()
-    for i in range(len(ids)):
-        place_id = ids[i]['id']
-        place_detail = gmaps.place(place_id, language = 'zh-tw')['result']
-        name = place_detail['name']
-        try:
-            street_name = place_detail['address_components'][1]['short_name']       
-        except:
-            street_name = 'None'
-        try:
-            address = place_detail['formatted_address']
-        except:
-            address = 'None'
-        try:
-            phone = place_detail['formatted_phone_number']
-        except:
-            phone = 'None'
-        try:
-            opening = shop_detail['opening_hours']['weekday_text']
-        except:
-            opening = 'None'
-    information[place_id] = {'name': name, 'address': address, 'street_name': street_name, 'phone_number': phone, 'opening':opening}
-    
-    return information                   
-
-    
+    return information 
 
         
                        
