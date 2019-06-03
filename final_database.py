@@ -8,47 +8,81 @@ geocode_result = gmaps.geocode("臺南市")
 city_loc = geocode_result[0]['geometry']['location']
 
 
+# places_to_go:  先前使用者輸入的所有想去地點
+'''version1:  只抓出符合關鍵字的第一筆資料'''
+def retrieve_place_ids(places_to_go):
+    for i in range(len(places_to_go)):
+        geocode_result = gmaps.geocode(places_to_go[i])
+        place_id = geocode_result[0]['place_id']
         
-'''取得台南市半徑30公里內，關鍵字包含之所有地點的「店名」&「id」 (台南市寬度約77.6公里)'''
-search_place = input()
-result = gmaps.places_autocomplete(search_place, session_token = '*', location = city_loc, radius = 30000, strict_bounds = True)
-candidate_ids = []
-for i in range(len(result)):
-    name = result[i]['structured_formatting']['main_text']
-    shopId = result[i]['place_id']
-    candidate_ids.append({'name': name, 'id':shopId})
-#print(candidate_ids)
+        information = []
+        detail_results = gmaps.place(place_id, language = "zh-tw")['result']
+        name = detail_results['name']
+        try:
+            address = detail_results['formatted_address']
+        except:
+            address = 'None'    
+        try:
+            phone = detail_results['formatted_phone_number']
+        except: 
+            phone = 'None'
+        try:
+            opening_hours = detail_results['opening_hours']['weekday_text']
+        except:
+            opening_hours = 'None'
+        information[place_id] = {'name': name, 'address': address, 'phone_number': phone, 'opening':opening}
+        
+    return information
 
 
 
+'''version2:  抓出符合關鍵字的所有資料，再依據使用者輸入的街道名稱，篩選出最終的地名'''
+def retrieve_place_ids(places_to_go):
+    ids = []
+    for i in range(len(places_to_go)):
+        search_result = gmaps.places_autocomplete(places_to_go[i], session_token = '*', location = city_loc, radius = 30000, strict_bounds = True)
+        for i in range(len(search_result)):
+            placeName = result[i]['structured_formatting']['main_text']
+            placeId = result[i]['place_id']
+            ids.append({'place_name': placeName, 'place_id':placeId}
+    return ids
 
-'''利用id取得目標地點資料: 店id、店名、完整地址、街名、電話、開放時間'''
-
-information = dict()
-for i in range(len(candidate_ids)):
-    shopId = candidate_ids[i]['id']
-    shop_detail = gmaps.place(shopId, language = 'zh-tw')['result']
+def create_all_data(ids):
+    information = dict()
+    for i in range(len(ids)):
+        place_id = ids[i]['id']
+        place_detail = gmaps.place(place_id, language = 'zh-tw')['result']
+        name = place_detail['name']
+        try:
+            street_name = place_detail['address_components'][1]['short_name']       
+        except:
+            street_name = 'None'
+        try:
+            address = place_detail['formatted_address']
+        except:
+            address = 'None'
+        try:
+            phone = place_detail['formatted_phone_number']
+        except:
+            phone = 'None'
+        try:
+            opening = shop_detail['opening_hours']['weekday_text']
+        except:
+            opening = 'None'
+    information[place_id] = {'name': name, 'address': address, 'street_name': street_name, 'phone_number': phone, 'opening':opening}
     
-    name = shop_detail['name']
-    street_name = shop_detail['address_components'][1]['short_name']
-    formal_address = shop_detail['formatted_address']
-    phone = shop_detail['formatted_phone_number']
-    location = shop_detail['geometry']['location']
-    try:
-        opening = shop_detail['opening_hours']
-    except:
-        opening = 'None'
-    information[shopId] = {'name': name, 'address': formal_address, 'street_name': street_name, 'location': location,  'opening':opening, 'phone_number': phone}
-    
-#for i in information.keys():
-#    print(i)
-#    for j in information[i].keys():
-#        print(j, ':', information[i][j])
-#    print()
+    return information                   
 
     
 
         
+                       
+                       
+                       
+                       
+                       
+                       
+                       
 '''從google map爬出地點之間的距離&移動時間'''
 
 address1= target_loc[0]
